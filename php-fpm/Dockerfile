@@ -1361,6 +1361,44 @@ RUN if [ ${INSTALL_DNSUTILS} = true ]; then \
     apt-get update && apt-get install -y dnsutils \
 ;fi
 
+
+
+###########################################################################
+# Install EUSPHP Library
+###########################################################################
+
+USER root
+
+RUN mkdir -p /data/certificates
+
+COPY ./eusphpei/certificates/* /data/certificates/
+
+RUN chmod -R 755 /data/certificates
+
+COPY ./eusphpei/eusphpei.64.8.0.3.tar /tmp/eusphpei.64.8.0.3.tar
+
+RUN mkdir -p /tmp/eusphpei
+
+RUN tar -C /tmp/eusphpei -xf /tmp/eusphpei.64.8.0.3.tar
+
+RUN mv /tmp/eusphpei/* $(php -r "echo ini_get('extension_dir');")/ \
+          && printf "extension=$(php -r "echo ini_get('extension_dir');")/eusphpe.so\n" > $PHP_INI_DIR/conf.d/eusphpe.ini \
+          && rm -rf /tmp/eusphpei
+
+
+#
+#ENV LD_LIBRARY_PATH /usr/local/lib/php/extensions/eusphpei
+#
+#RUN mkdir -p /usr/local/lib/php/extensions/eusphpei
+#
+#
+#
+#RUN chmod -R 755 /usr/local/lib/php/extensions/eusphpei
+#
+#
+#RUN echo "extension=/usr/local/lib/php/extensions/eusphpei/eusphpe.so" > $PHP_INI_DIR/conf.d/eusphpe.ini
+
+
 ###########################################################################
 # Check PHP version:
 ###########################################################################
