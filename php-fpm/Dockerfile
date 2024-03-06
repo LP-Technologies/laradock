@@ -1375,7 +1375,7 @@ COPY ./eusphpei/certificates/* /data/certificates/
 
 RUN chmod -R 755 /data/certificates
 
-COPY ./eusphpei/eusphpei.64.8.01.4.tar /tmp/eusphpei.64.8.1.4.tar
+COPY ./eusphpei/eusphpei.64.8.1.4.tar /tmp/eusphpei.64.8.1.4.tar
 
 RUN mkdir -p /tmp/eusphpei
 
