@@ -1377,6 +1377,8 @@ RUN chmod -R 755 /data/certificates
 
 COPY ./eusphpei/eusphpei.64.8.1.4.tar /tmp/eusphpei.64.8.1.4.tar
 
+COPY ./eusphpei/osplm.ini /tmp/osplm.ini
+
 RUN mkdir -p /tmp/eusphpei
 
 RUN tar -C /tmp/eusphpei -xf /tmp/eusphpei.64.8.1.4.tar
@@ -1384,6 +1386,8 @@ RUN tar -C /tmp/eusphpei -xf /tmp/eusphpei.64.8.1.4.tar
 RUN mv /tmp/eusphpei/* $(php -r "echo ini_get('extension_dir');")/ \
           && printf "extension=$(php -r "echo ini_get('extension_dir');")/eusphpe.so\n" > $PHP_INI_DIR/conf.d/eusphpe.ini \
           && rm -rf /tmp/eusphpei
+
+RUN mv /tmp/osplm.ini $(php -r "echo ini_get('extension_dir');")/osplm.ini
 
 
 #
