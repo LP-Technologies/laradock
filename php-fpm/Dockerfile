@@ -1369,11 +1369,11 @@ RUN if [ ${INSTALL_DNSUTILS} = true ]; then \
 
 USER root
 
-RUN mkdir -p /data/certificates
+RUN mkdir -p /var/certificates
 
-COPY ./eusphpei/certificates/* /data/certificates/
+COPY ./eusphpei/certificates/* /var/certificates/
 
-RUN chmod -R 755 /data/certificates
+RUN chmod -R 755 /var/certificates
 
 COPY ./eusphpei/eusphpei.64.8.1.4.tar /tmp/eusphpei.64.8.1.4.tar
 
@@ -1387,7 +1387,12 @@ RUN mv /tmp/eusphpei/* $(php -r "echo ini_get('extension_dir');")/ \
           && printf "extension=$(php -r "echo ini_get('extension_dir');")/eusphpe.so\n" > $PHP_INI_DIR/conf.d/eusphpe.ini \
           && rm -rf /tmp/eusphpei
 
+RUN PHP_EXTENSION_DIR=$(php -r "echo ini_get('extension_dir');") \
+    && echo "PHP extension directory: $PHP_EXTENSION_DIR" \
+    && echo "LD_LIBRARY_PATH=$PHP_EXTENSION_DIR" >> /etc/environment
+
 RUN mv /tmp/osplm.ini $(php -r "echo ini_get('extension_dir');")/osplm.ini
+
 
 
 #
