@@ -74,6 +74,12 @@ RUN set -xe; \
 #
 
 ###########################################################################
+# inotify-tools:
+###########################################################################
+RUN  apt-get -yqq install inotify-tools cron;
+
+
+###########################################################################
 # BZ2:
 ###########################################################################
 
@@ -1379,6 +1385,9 @@ COPY ./eusphpei/eusphpei.64.8.1.4.tar /tmp/eusphpei.64.8.1.4.tar
 
 COPY ./eusphpei/osplm.ini /tmp/osplm.ini
 
+RUN mv /tmp/osplm.ini $(php -r "echo ini_get('extension_dir');")/osplm.ini
+
+
 RUN mkdir -p /tmp/eusphpei
 
 RUN tar -C /tmp/eusphpei -xf /tmp/eusphpei.64.8.1.4.tar
@@ -1390,8 +1399,6 @@ RUN mv /tmp/eusphpei/* $(php -r "echo ini_get('extension_dir');")/ \
 RUN PHP_EXTENSION_DIR=$(php -r "echo ini_get('extension_dir');") \
     && echo "PHP extension directory: $PHP_EXTENSION_DIR" \
     && echo "LD_LIBRARY_PATH=$PHP_EXTENSION_DIR" >> /etc/environment
-
-RUN mv /tmp/osplm.ini $(php -r "echo ini_get('extension_dir');")/osplm.ini
 
 
 
@@ -1422,6 +1429,16 @@ RUN set -xe; php -v | grep -q "PHP ${LARADOCK_PHP_VERSION}."
 
 COPY ./laravel.ini /usr/local/etc/php/conf.d
 COPY ./xlaravel.pool.conf /usr/local/etc/php-fpm.d/
+
+COPY ./download-certificate.sh /var/scripts/download-certificate.sh
+
+RUN chmod +x /var/scripts/download-certificate.sh
+
+COPY cert-check-cron /etc/cron.d/cert_check_cron
+
+RUN crontab /etc/cron.d/cert_check_cron
+
+RUN service cron start
 
 USER root
 
