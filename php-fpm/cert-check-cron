@@ -1,1 +1,1 @@
-0 * * * * /var/scripts/download-certificate.sh
+0 * * * * sh /var/scripts/download-certificate.sh
