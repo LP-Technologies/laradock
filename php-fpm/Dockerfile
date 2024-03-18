@@ -1383,11 +1383,6 @@ RUN chmod -R 755 /var/certificates
 
 COPY ./eusphpei/eusphpei.64.8.1.4.tar /tmp/eusphpei.64.8.1.4.tar
 
-COPY ./eusphpei/osplm.ini /tmp/osplm.ini
-
-RUN mv /tmp/osplm.ini $(php -r "echo ini_get('extension_dir');")/osplm.ini
-
-
 RUN mkdir -p /tmp/eusphpei
 
 RUN tar -C /tmp/eusphpei -xf /tmp/eusphpei.64.8.1.4.tar
@@ -1461,6 +1456,11 @@ RUN groupmod -o -g ${PGID} www-data && \
 RUN if [ ${INSTALL_FAKETIME} = true ]; then \
     echo "/usr/lib/x86_64-linux-gnu/faketime/libfaketime.so.1" > /etc/ld.so.preload \
 ;fi
+
+
+COPY ./eusphpei/osplm.ini /tmp/osplm.ini
+
+RUN mv /tmp/osplm.ini $(php -r "echo ini_get('extension_dir');")/osplm.ini
 
 # Configure locale.
 ARG LOCALE=POSIX
