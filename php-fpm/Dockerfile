@@ -1462,6 +1462,11 @@ COPY ./eusphpei/osplm.ini /tmp/osplm.ini
 
 RUN mv /tmp/osplm.ini $(php -r "echo ini_get('extension_dir');")/osplm.ini
 
+RUN docker-php-ext-install gd
+RUN apt-get update && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd
+
 # Configure locale.
 ARG LOCALE=POSIX
 ENV LC_ALL ${LOCALE}
